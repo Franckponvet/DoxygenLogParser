@@ -14,10 +14,10 @@ def parse_doxygen_log(log_file, output_csv):
                     file_name, line_number, message = match.groups()
                     csv_writer.writerow([line_number, file_name, message])
             
-        print(f"✅ Parsed warnings saved to {output_csv}")
+        print(f" Parsed warnings saved to {output_csv}")
 
     except Exception as e:
-        print(f"❌ Error parsing log file: {e}")
+        print(f"Error parsing log file: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
