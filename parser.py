@@ -1,5 +1,6 @@
 import sys
 import csv
+import re
 
 def parse_doxygen_log(log_file, output_csv):
     try:
@@ -8,17 +9,15 @@ def parse_doxygen_log(log_file, output_csv):
             csv_writer.writerow(["Line", "File", "Message"])  # CSV headers
             
             for line in log:
-                if ":" in line and "warning:" in line:
-                    parts = line.strip().split(":", maxsplit=2)
-                    if len(parts) == 3:
-                        csv_writer.writerow(parts)
-                    else:
-                        print(f"Skipping malformed line: {line.strip()}")
+                match = re.search(r'(.+?):(\d+):\s+warning:\s+(.+)', line)
+                if match:
+                    file_name, line_number, message = match.groups()
+                    csv_writer.writerow([line_number, file_name, message])
             
-        print(f" Parsed warnings saved to {output_csv}")
+        print(f"✅ Parsed warnings saved to {output_csv}")
 
     except Exception as e:
-        print(f" Error parsing log file: {e}")
+        print(f"❌ Error parsing log file: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
